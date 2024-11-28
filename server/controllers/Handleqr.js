@@ -23,6 +23,33 @@ exports.getQR=async(req,res)=>{
     }
 }
 
+exports.getqrbyid=async(req,res)=>{
+    try
+    {
+        const { qrId } = req.params;
+        const qrData = await qrCode.findOne({ qrId });
+        if(!qrData) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "QR Code not found" 
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            qrData
+        });
+    }
+    catch(error)
+    {
+        console.error("Error handling QR Code redirection:", error);
+        res.status(500).json({ 
+            success: false, 
+            message: "Error redirecting to URL" 
+        });
+    }
+}
+
 exports.updateQR=async(req,res)=>{
     try
     {
@@ -54,6 +81,26 @@ exports.updateQR=async(req,res)=>{
         res.status(500).json({ 
             success: false, 
             message: "Error in updating QR"
+        });
+    }
+}
+
+exports.getAllqr=async(req,res)=>{
+    try 
+    {
+        const userid=req.user.id;
+        const qrs=await qrCode.find({userid});
+
+        res.status(200).json({
+            success: true,
+            qrs,
+        });
+    } 
+    catch (error) 
+    {
+        res.status(500).json({ 
+            success: false, 
+            message: "Server Error!"
         });
     }
 }

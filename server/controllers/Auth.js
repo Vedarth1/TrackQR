@@ -98,3 +98,30 @@ exports.login=async (req,res)=>{
         });
     }
 }
+
+exports.getUser=async(req,res)=>{
+    try
+    {
+        const email=req.user.email;
+        const existinguser=await User.findOne({email});
+
+        if(!existinguser){
+            return res.status(401).json({
+                success:false,
+                message:"User not found",
+            });
+        }
+
+        return res.status(200).json({
+            success:true,
+            user:existinguser,
+        });
+    }
+    catch(error)
+    {
+        return res.status(500).json({
+            success:false,
+            message:"Server Error!",
+        });
+    }
+}
