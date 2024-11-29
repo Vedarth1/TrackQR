@@ -17,7 +17,10 @@ app.use(cookieparser());
 require("./config/database").connect();
 
 const user=require("./routes/user");
+const setupSwaggerDocs = require("./swagger");
+
 app.use("/api/v1",user);
+setupSwaggerDocs(app);
 
 app.listen(PORT,()=>{
     console.log("app is running on PORT:4000");
